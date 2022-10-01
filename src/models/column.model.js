@@ -42,22 +42,22 @@ const createNew = async (data) => {
 
     let dbInstance = await getDB();
     let ColumnsModel = dbInstance.collection(columnCollectionName);
-    
+
     const result = await ColumnsModel.insertOne(insertValue);
     const searchedResult = await ColumnsModel.find({
       _id: result.insertedId,
     }).toArray();
-    
+
     return searchedResult[0];
   } catch (error) {
     throw new Error(error);
   }
 };
 /**
- * @param {string} columnId 
+ * @param {string} columnId
  * @param {string} cardId
  */
- const pushCardOrder = async (columnId, cardId) => {
+const pushCardOrder = async (columnId, cardId) => {
   try {
     let dbInstance = await getDB();
     const result = await dbInstance
@@ -75,12 +75,17 @@ const createNew = async (data) => {
 
 const update = async (id, data) => {
   try {
+    const updateData = {
+      ...data,
+      boardId: ObjectId(data.boardId),
+    };
+
     let dbInstance = await getDB();
     const result = await dbInstance
       .collection(columnCollectionName)
       .findOneAndUpdate(
         { _id: ObjectId(id) },
-        { $set: data },
+        { $set: updateData },
         { returnDocument: "after" }
       );
     return result.value;

@@ -33,7 +33,7 @@ const createNew = async (data) => {
     let CardsModel = dbInstance.collection(cardCollectionName);
 
     const result = await CardsModel.insertOne(insertValue);
-    
+
     const searchedResult = await CardsModel.find({
       _id: result.insertedId,
     }).toArray();
@@ -44,7 +44,21 @@ const createNew = async (data) => {
   }
 };
 
+const deleteMany = async (ids) => {
+  try {
+    const transformIds = ids.map((i) => ObjectId(i));
+    let dbInstance = await getDB();
+    const result = await dbInstance
+      .collection(cardCollectionName)
+      .updateMany({ _id: { $in: transformIds } }, { $set: { _destroy: true } });
+    return result;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
 export const CardModel = {
   cardCollectionName,
   createNew,
+  deleteMany,
 };
