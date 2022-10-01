@@ -34,12 +34,40 @@ const getColumns = async () => {
 
 const createNew = async (data) => {
   try {
-    const value = await validateSchema(data);
+    const validatedValue = await validateSchema(data);
+    const insertValue = {
+      ...validatedValue,
+      boardId: ObjectId(validatedValue.boardId),
+    };
+
+    let dbInstance = await getDB();
+    let ColumnsModel = dbInstance.collection(columnCollectionName);
+    
+    const result = await ColumnsModel.insertOne(insertValue);
+    const searchedResult = await ColumnsModel.find({
+      _id: result.insertedId,
+    }).toArray();
+    
+    return searchedResult[0];
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+/**
+ * @param {string} columnId 
+ * @param {string} cardId
+ */
+ const pushCardOrder = async (columnId, cardId) => {
+  try {
     let dbInstance = await getDB();
     const result = await dbInstance
       .collection(columnCollectionName)
-      .insertOne(value);
-    return result;
+      .findOneAndUpdate(
+        { _id: ObjectId(columnId) },
+        { $push: { cardOrder: cardId } },
+        { returnDocument: "after" }
+      );
+    return result.value;
   } catch (error) {
     throw new Error(error);
   }
@@ -83,8 +111,10 @@ const remove = async (id) => {
 };
 
 export const ColumnModel = {
+  columnCollectionName,
   getColumns,
   createNew,
+  pushCardOrder,
   update,
   remove,
 };
