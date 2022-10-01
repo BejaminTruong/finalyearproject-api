@@ -26,6 +26,7 @@
   "homepage": "https://github.com/BejaminTruong/finalyearproject-api#readme",
   "dependencies": {
     "@babel/runtime": "^7.19.0",
+    "cors": "^2.8.5",
     "express": "^4.18.1",
     "joi": "^17.6.1",
     "mongodb": "^4.10.0"
