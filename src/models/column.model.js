@@ -19,13 +19,28 @@ const validateSchema = async (data) => {
   });
 };
 
+const getOneColumn = async (columnId) => {
+  try {
+    let dbInstance = await getDB();
+    const result = await dbInstance
+      .collection(columnCollectionName)
+      .find({ _id: ObjectId(columnId), _destroy: false })
+      .project({ _destroy: 0 })
+      .toArray();
+    return result[0];
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
 const getColumns = async () => {
   try {
     let dbInstance = await getDB();
-    const cursor = await dbInstance
+    const result = await dbInstance
       .collection(columnCollectionName)
-      .find({ _destroy: false });
-    const result = await cursor.toArray();
+      .find({ _destroy: false })
+      .project({ _destroy: 0 })
+      .toArray();
     return result;
   } catch (error) {
     throw new Error(error);
@@ -46,7 +61,9 @@ const createNew = async (data) => {
     const result = await ColumnsModel.insertOne(insertValue);
     const searchedResult = await ColumnsModel.find({
       _id: result.insertedId,
-    }).toArray();
+    })
+      .project({ _destroy: 0 })
+      .toArray();
 
     return searchedResult[0];
   } catch (error) {
@@ -63,7 +80,7 @@ const pushCardOrder = async (columnId, cardId) => {
     const result = await dbInstance
       .collection(columnCollectionName)
       .findOneAndUpdate(
-        { _id: ObjectId(columnId) },
+        { _id: ObjectId(columnId), _destroy: false },
         { $push: { cardOrder: cardId } },
         { returnDocument: "after" }
       );
@@ -82,7 +99,7 @@ const update = async (id, data) => {
     const result = await dbInstance
       .collection(columnCollectionName)
       .findOneAndUpdate(
-        { _id: ObjectId(id) },
+        { _id: ObjectId(id), _destroy: false },
         { $set: updateData },
         { returnDocument: "after" }
       );
@@ -98,7 +115,7 @@ const remove = async (id) => {
     const result = await dbInstance
       .collection(columnCollectionName)
       .findOneAndUpdate(
-        { _id: ObjectId(id) },
+        { _id: ObjectId(id), _destroy: false },
         {
           $set: {
             _destroy: true,
@@ -113,6 +130,19 @@ const remove = async (id) => {
   }
 };
 
+const deleteMany = async (ids) => {
+  try {
+    const transformIds = ids.map((i) => ObjectId(i));
+    let dbInstance = await getDB();
+    const result = await dbInstance
+      .collection(columnCollectionName)
+      .updateMany({ _id: { $in: transformIds } }, { $set: { _destroy: true, cardOrder: [] } });
+    return result;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
 export const ColumnModel = {
   columnCollectionName,
   getColumns,
@@ -120,4 +150,6 @@ export const ColumnModel = {
   pushCardOrder,
   update,
   remove,
+  getOneColumn,
+  deleteMany,
 };

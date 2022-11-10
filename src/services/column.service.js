@@ -1,6 +1,7 @@
 import { ColumnModel } from "*/models/column.model";
 import { BoardModel } from "*/models/board.model";
 import { CardModel } from "*/models/card.model";
+import { BoardService } from  "*/services/board.service"
 
 const getColumns = async () => {
   try {
@@ -26,7 +27,7 @@ const createNew = async (data) => {
   }
 };
 
-const update = async (id, data) => {
+const update = async (id, data, userId) => {
   try {
     const updateData = { ...data, updatedAt: Date.now() };
 
@@ -35,11 +36,12 @@ const update = async (id, data) => {
 
     const updatedColumn = await ColumnModel.update(id, updateData);
 
-    if (updatedColumn._destroy) {
-      CardModel.deleteMany(updatedColumn.cardOrder);
+    if (updateData._destroy) {
+      await CardModel.deleteMany(updatedColumn.cardOrder);
+      await BoardModel.removeColumnFromBoard(updatedColumn.boardId, updatedColumn._id)
     }
-
-    return updatedColumn;
+    const updatedBoard = await BoardService.getFullBoard(updatedColumn.boardId, userId);
+    return updatedBoard;
   } catch (error) {
     throw new Error(error);
   }

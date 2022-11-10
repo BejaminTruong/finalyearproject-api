@@ -6,9 +6,16 @@ const router = express.Router();
 
 router
   .route("/")
-  //   .get((req, res) => console.log("GET boards"))
+  .get(BoardController.getAllBoards)
   .post(BoardValidation.createNew, BoardController.createNew);
 
-router.route("/:id").get(BoardController.getFullBoard).put(BoardValidation.update, BoardController.update);
+router
+  .route("/:id")
+  .get(BoardController.getFullBoard)
+  .put(BoardValidation.update, BoardController.update);
+
+router
+  .route("/updateMember/:id")
+  .post(BoardValidation.update, BoardController.updateMember);
 
 export const boardRoutes = router;

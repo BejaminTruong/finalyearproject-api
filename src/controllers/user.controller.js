@@ -1,9 +1,9 @@
-import { BoardService } from "*/services/board.service";
+import { UserService } from "*/services/user.service";
 import { HttpStatusCode } from "*/utilities/constants";
 
-const getAllBoards = async (req, res) => {
+const register = async (req, res) => {
   try {
-    const result = await BoardService.getAllBoards(req.user._id);
+    const result = await UserService.register(req.body);
     res.status(HttpStatusCode.OK).json(result);
   } catch (error) {
     res.status(HttpStatusCode.INTERNAL_SERVER).json({
@@ -12,9 +12,9 @@ const getAllBoards = async (req, res) => {
   }
 };
 
-const getFullBoard = async (req, res) => {
+const login = async (req, res) => {
   try {
-    const result = await BoardService.getFullBoard(req.params.id, req.user._id);
+    const result = await UserService.login(req.body);
     res.status(HttpStatusCode.OK).json(result);
   } catch (error) {
     res.status(HttpStatusCode.INTERNAL_SERVER).json({
@@ -23,9 +23,20 @@ const getFullBoard = async (req, res) => {
   }
 };
 
-const createNew = async (req, res) => {
+const getUser = async (req, res) => {
   try {
-    const result = await BoardService.createNew(req.user, req.body);
+    const result = await UserService.getUser(req.user._id);
+    res.status(HttpStatusCode.OK).json(result);
+  } catch (error) {
+    res.status(HttpStatusCode.INTERNAL_SERVER).json({
+      errors: error.message,
+    });
+  }
+};
+
+const getUserByEmail = async (req, res) => {
+  try {
+    const result = await UserService.getUserByEmail(req.params.email);
     res.status(HttpStatusCode.OK).json(result);
   } catch (error) {
     res.status(HttpStatusCode.INTERNAL_SERVER).json({
@@ -36,8 +47,7 @@ const createNew = async (req, res) => {
 
 const update = async (req, res) => {
   try {
-    const { id } = req.params;
-    const result = await BoardService.update(id, req.body, req.user._id);
+    const result = await UserService.update(req.params.id, req.body);
     res.status(HttpStatusCode.OK).json(result);
   } catch (error) {
     res.status(HttpStatusCode.INTERNAL_SERVER).json({
@@ -46,10 +56,9 @@ const update = async (req, res) => {
   }
 };
 
-const updateMember = async (req, res) => {
+const getAllMembers = async (req, res) => {
   try {
-    const { id } = req.params;
-    const result = await BoardService.updateMember(id, req.body, req.user._id);
+    const result = await UserService.getAllMembers(req.params.id);
     res.status(HttpStatusCode.OK).json(result);
   } catch (error) {
     res.status(HttpStatusCode.INTERNAL_SERVER).json({
@@ -58,10 +67,11 @@ const updateMember = async (req, res) => {
   }
 };
 
-export const BoardController = {
-  getAllBoards,
-  getFullBoard,
-  createNew,
+export const UserController = {
+  register,
+  login,
+  getUser,
   update,
-  updateMember,
+  getUserByEmail,
+  getAllMembers,
 };

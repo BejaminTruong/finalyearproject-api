@@ -4,6 +4,8 @@ import { env } from "*/config/environment";
 import { apiV1 } from "*/routes/v1";
 import cors from "cors";
 import { corsOptions } from "*/config/cors";
+import { Middleware } from "*/middlewares";
+import { unless } from "express-unless";
 
 connectDB()
   .then(() => console.log("Connected successfully to database server!"))
@@ -19,6 +21,17 @@ const bootServer = () => {
   app.use(cors(corsOptions));
 
   app.use(express.json());
+
+  Middleware.verifyToken.unless = unless;
+
+  app.use(
+    Middleware.verifyToken.unless({
+      path: [
+        { url: "/v1/users/login", method: ["POST"] },
+        { url: "/v1/users/register", method: ["POST"] },
+      ],
+    })
+  );
 
   app.use("/v1", apiV1);
 

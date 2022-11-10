@@ -1,6 +1,6 @@
 import { CardModel } from "*/models/card.model";
 import { ColumnModel } from "*/models/column.model";
-
+import { BoardService } from  "*/services/board.service"
 const createNew = async (data) => {
   try {
     const newCard = await CardModel.createNew(data);
@@ -16,15 +16,16 @@ const createNew = async (data) => {
   }
 };
 
-const update = async (id, data) => {
+const update = async (id, data, userId) => {
   try {
     const updateData = { ...data, updatedAt: Date.now() };
 
     if (updateData._id) delete updateData._id;
 
     const updatedCard = await CardModel.update(id, updateData);
-
-    return updatedCard;
+    
+    const updatedBoard = await BoardService.getFullBoard(updatedCard.boardId, userId);
+    return updatedBoard
   } catch (error) {
     throw new Error(error);
   }

@@ -23,7 +23,9 @@ const update = async (req, res, next) => {
     columnOrder: Joi.array().items(Joi.string()),
   });
   try {
-    await condition.validateAsync(req.body, {
+    let data = req.body;
+    if (req.body.boardData) data = req.body.boardData;
+    await condition.validateAsync(data, {
       abortEarly: false,
       allowUnknown: true,
     });
