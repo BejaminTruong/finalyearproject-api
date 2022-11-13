@@ -5,4 +5,4 @@ export const HttpStatusCode = {
   NOT_FOUND: 404,
   INTERNAL_SERVER: 500,
 };
-export const WHITELIST_DOMAINS = ["http://localhost:3000", "https://final-year-project-13645.web.app/"];
+export const WHITELIST_DOMAINS = ["http://localhost:3000", "https://final-year-project-13645.web.app"];
