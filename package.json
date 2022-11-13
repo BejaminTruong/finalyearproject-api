@@ -12,7 +12,7 @@
     "create-build": "mkdir build",
     "clean": "npm run remove-build && npm run create-build",
     "build-babel": "babel ./src -d ./build/src",
-    "build": "npm run clean && npm run build-babel",
+    "build": "npm run create-build && npm run build-babel",
     "production": "npm run build && node ./build/src/server.js",
     "dev": "nodemon --exec ./node_modules/.bin/babel-node ./src/server.js",
     "start": "node ./build/src/server.js"
