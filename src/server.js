@@ -27,8 +27,8 @@ const bootServer = () => {
   app.use(
     Middleware.verifyToken.unless({
       path: [
-        { url: "/v1/users/login", method: ["POST"] },
-        { url: "/v1/users/register", method: ["POST"] },
+        { url: "//v1/users/login", method: ["POST"] },
+        { url: "//v1/users/register", method: ["POST"] },
       ],
     })
   );
