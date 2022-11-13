@@ -1,8 +1,6 @@
-- Trong package.json lúc deploy heroku lần đầu khi chưa có thư mục "build" trên server heroku thì chạy lệnh này:
+- Trong package.json lúc deploy heroku thì chạy lệnh này:
     "build": "npm run create-build && npm run build-babel"
 
-- Khi đã có thư mục "build" rồi (đã deploy thành công trước đó) thì sửa lại thành:
+- Dưới môi trường dev thì trường hợp đã có thư mục build thì chạy lệnh này còn chưa có thì phải tạo tay thư mục build rồi mới chạy được lệnh
+như ở trên:
     "build": "npm run clean && npm run build-babel"
-
-=> Giải thích: Vì command của window không tự tạo thư mục mới nếu không có sẵn và sẽ trả về lỗi nếu cố tình muốn xóa
-1 thư mục chưa tồn tại cho nên phải tạo thủ công bằng lệnh npm run build rồi mới chạy được lệnh npm run clean (vừa xóa cũ vừa tạo mới)
