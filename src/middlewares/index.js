@@ -2,7 +2,7 @@ import { sign, verify } from "jsonwebtoken";
 import { HttpStatusCode } from "*/utilities/constants";
 import { getDB } from "*/config/mongodb";
 import { ObjectID } from "bson";
-require("dotenv").config();
+// require("dotenv").config();
 const generateToken = (id, email) => {
   const token = sign({ id, email }, process.env.JWT_SECRET, {
     // expiresIn: process.env.TOKEN_EXPIRE_TIME,
