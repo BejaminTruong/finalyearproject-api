@@ -1,6 +1,6 @@
-- Trong package.json lúc deploy heroku thì chạy lệnh này:
+- In package.json file when deploy to heroku run this command:
     "build": "npm run create-build && npm run build-babel"
 
-- Dưới môi trường dev thì trường hợp đã có thư mục build thì chạy lệnh này còn chưa có thì phải tạo tay thư mục build rồi mới chạy được lệnh
-như ở trên:
+- In development environment if the "build" folder is existed then run the command below. If not, create the "build" folder first 
+then run the above command:
     "build": "npm run clean && npm run build-babel"

@@ -1,6 +1,6 @@
 import express from "express";
 import { connectDB } from "*/config/mongodb";
-// import { env } from "*/config/environment";
+//For dev: import { env } from "*/config/environment";
 import { apiV1 } from "*/routes/v1";
 import cors from "cors";
 import { corsOptions } from "*/config/cors";
